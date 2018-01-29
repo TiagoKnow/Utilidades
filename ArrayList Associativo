@@ -1,0 +1,60 @@
+//=============================================================================//
+//Aqui, colocamos a função de consulta com um array list associativo;
+//ex: realizar consulta de querys distintas, inner join, view, function e etc
+
+    //Operações de BD
+    Statement           stmt;
+    PreparedStatement   pstmt;
+    ResultSet           rs;
+    ResultSetMetaData   rsmd;
+    
+    //Vetores
+    ArrayList<ArrayList>    retornoAssociativo  = new ArrayList<ArrayList>();
+    
+    public ArrayList Consulta(String sql1){
+        sql = sql1;
+        qtdColuna = 0;
+        retornoAssociativo = new ArrayList<ArrayList>();
+        try{
+            pstmt = con.prepareStatement(sql);
+            rs    = pstmt.executeQuery();
+            rsmd  = rs.getMetaData();  
+            
+            qtdColuna = rsmd.getColumnCount();
+            while(rs.next()){
+                linha = new ArrayList<String>();
+                for(int i = 1; i <= qtdColuna; i++){
+                    linha.add(rs.getString(i));
+                }
+                retornoAssociativo.add(linha);
+            }
+        }catch(SQLException erro){
+            //sqlstate = SQL.SQLSTATE(erro, sql, "S"); Classe para tratar erro específico do sqlstate;
+            retornoAssociativo = new ArrayList();
+        }
+        return retornoAssociativo;
+    }
+    
+ 
+    //Exemplo de leitura de dados
+        ArrayList<ArrayList> dadosBanco = new ArrayList();
+        
+        sql = "select ex1, ex2, ex3 from tb_exemplo"; //Cada atribulo solicitado na consulta, fará um vetor com as informações a cima.
+        
+        dadosBanco.clear();
+        dadosBanco = Consulta(sql); //Classe a cima
+        
+        int    ex1 = 0;
+        String ex2 = "";
+        String ex3 = "";
+        
+        for(int i = 0; i < dadosBanco.size(); i++){
+            ex1        = Integer.parseInt(String.valueOf(dadosBanco.get(i).get(0)));
+            ex2        =                  String.valueOf(dadosBanco.get(i).get(1));
+            ex3        =                  String.valueOf(dadosBanco.get(i).get(2));
+        }
+        
+        //Onde a variavel 'i' se refere ao número da linha e de 0 a 2 é a coluna do atribulo
+        //Temos em resumo um vetor bidimensional entre x e y da matemática.
+        
+        //Com este exemplo, contamos com a melhora da produtividade nas funções de consulta do projeto em questão a banco de dados.
